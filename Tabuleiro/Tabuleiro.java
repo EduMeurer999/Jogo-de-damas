@@ -1,12 +1,14 @@
 package Tabuleiro;
 
+import Peça.Peça;
+
 public class Tabuleiro {
     private String[][] tab = new String[8][8];
     
     public Tabuleiro(){
         
     }
-    public String desenhaTabuleiro(String[][] tab, boolean emBranco){
+    public String desenhaTabuleiro(Peça[][] tab, boolean emBranco){
         String strTabuleiro = "";
         if(emBranco){
             for (int i = 0; i < 8; i++) {
@@ -22,8 +24,7 @@ public class Tabuleiro {
                     strTabuleiro += "|   ";
                     if(j == 7){
                         strTabuleiro += "|\n |---|---|---|---|---|---|---|---|\n";
-                    }
-                    
+                    }  
                 }
             }
         }       
@@ -39,8 +40,8 @@ public class Tabuleiro {
                     }
                     if(tab[i][j] == null){
                         strTabuleiro += "|   ";
-                    }else{
-                        strTabuleiro += "|  "+tab[i][j]+" ";
+                    }else{ 
+                        strTabuleiro += "| "+tab[i][j].getSimbolo()+" ";
                     }
                     
                     if(j == 7){

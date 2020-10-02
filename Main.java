@@ -1,16 +1,43 @@
+import Peça.Peça;
 import Tabuleiro.Tabuleiro;
 
 public class Main {
 
     public static void main(String[] args) {
         Tabuleiro tab = new Tabuleiro();
-        String[][] t = new String[8][8];
-        for (int i = 0; i < 8; i++) {
+        Peça[][] t = new Peça[8][8];
+        boolean pula = false;
+        for (int i = 0; i < 3; i++) {
+            pula = false;
             for (int j = 0; j < 8; j++) {
+                if(i == 1 && j == 0){
+                    pula = true;
+                }
+                if (!pula) {
+                    t[i][j] = new Peça("O", i, j);
+                    pula = true;
+                }else{
+                    pula=false;
+                }
                 
             }
         }
-        System.out.println(tab.desenhaTabuleiro(t, true));
-
+        
+        for (int i = 0; i < 3; i++) {
+            pula = false;
+            for (int j = 0; j < 8; j++) {
+                if(i == 1 && j == 0){
+                    pula = true;
+                }
+                if (!pula) {
+                    t[i+5][j] = new Peça("X", i+5, j);
+                    pula = true;
+                }else{
+                    pula=false;
+                }
+                
+            }
+        }
+        System.out.println(tab.desenhaTabuleiro(t, false));
     }
 }
