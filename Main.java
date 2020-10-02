@@ -14,7 +14,7 @@ public class Main {
                     pula = true;
                 }
                 if (!pula) {
-                    t[i][j] = new Peça("O", i, j);
+                    t[i][j] = new Peça("\u26AA", i, j);
                     pula = true;
                 }else{
                     pula=false;
@@ -26,11 +26,11 @@ public class Main {
         for (int i = 0; i < 3; i++) {
             pula = false;
             for (int j = 0; j < 8; j++) {
-                if(i == 1 && j == 0){
+                if((i == 0 || i == 2) && j == 0){
                     pula = true;
                 }
                 if (!pula) {
-                    t[i+5][j] = new Peça("X", i+5, j);
+                    t[i+5][j] = new Peça("\u26AB", i+5, j);
                     pula = true;
                 }else{
                     pula=false;
