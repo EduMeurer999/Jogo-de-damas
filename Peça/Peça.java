@@ -18,24 +18,62 @@ public class Peça {
     }
 
     public boolean validarJogada(String direção, int x, int y) {
-
-        if (this.cor == "Branco" && this.tipo == "Comum") {
-            if (direção != "direita_cima" && direção != "esquerda_cima") {
-                return false;
-            }
-        } else if (this.cor == "Preto" && this.tipo == "Comum") {
-            if (direção != "direita_baixo" && direção != "esquerda_baixo") {
-                return false;
-            }
+        int newX = x;
+        int newY = y;
+        int newXDama = x;
+        int newYDama = y;
+        boolean duasCasas = false;
+        if (this.tipo == "Dama") {
+            duasCasas = true;
         }
-        if (x > 8 || x < 0 || y > 8 || y < 0) {
+        switch (direção) {
+            case "direita_cima":
+                newX--;
+                newY++;
+                if (duasCasas) {
+                    newXDama = newXDama - 2;
+                    newYDama = newYDama + 2;
+                }
+                // Fascista (Bonoro)
+                break;
+            case "esquerda_cima":
+                newX--;
+                newY--;
+                if (duasCasas) {
+                    newXDama = newXDama - 2;
+                    newYDama = newYDama - 2;
+                }
+                // Comunista
+                break;
+            case "direita_baixo":
+                newX++;
+                newY++;
+                if (duasCasas) {
+                    newXDama = newXDama + 2;
+                    newYDama = newYDama + 2;
+                }
+                // Full capetalismo
+                break;
+            case "esquerda_baixo":
+                newX++;
+                newY--;
+                if (duasCasas) {
+                    newXDama = newXDama + 2;
+                    newYDama = newYDama - 2;
+                }
+                // Socialista
+                break;
+        }
+
+        if (newX > 8 || newX < 0 || newY > 8 || newY < 0
+                || ((newXDama > 8 || newXDama < 0 || newYDama > 8 || newYDama < 0) && this.tipo == "Dama")) {
             return false;
         }
 
         return true;
     }
 
-    public String[][] movimentar(String direção, String[][] tabuleiro) {
+    public Peça[][] movimentar(String direção, Peça[][] tabuleiro) {
         // controla o movimento da peça,
         // idependente se for dama ou não,
         // movimenta a peça para todos os lados,
@@ -59,61 +97,97 @@ public class Peça {
                     scan.close();
                 }
             } while (opt != "S" && opt != "N");
-
         }
+
         switch (direção) {
             case "direita_cima":
-                newX++;
+                newX--;
                 newY++;
-                if (duasCasas){
-                    newX++;
+                if (duasCasas) {
+                    newX--;
                     newY++;
                 }
                 // Fascista (Bonoro)
                 break;
             case "esquerda_cima":
                 newX--;
-                newY++;
-                if (duasCasas){
+                newY--;
+                if (duasCasas) {
                     newX--;
-                    newY++;
+                    newY--;
                 }
                 // Comunista
                 break;
             case "direita_baixo":
                 newX++;
-                newY--;
-                if (duasCasas){
+                newY++;
+                if (duasCasas) {
                     newX++;
-                    newY--;
+                    newY++;
                 }
                 // Full capetalismo
                 break;
             case "esquerda_baixo":
-                newX--;
+                newX++;
                 newY--;
-                if (duasCasas){
-                    newX--;
+                if (duasCasas) {
+                    newX++;
                     newY--;
                 }
                 // Socialista
                 break;
         }
 
-        
-        if (this.tipo == "Comum" && this.cor == "Branco" && newY == 7) {
+       
+        if (tabuleiro[newX][newY] != null) {
+            if (!tabuleiro[newX][newY].cor.equals(this.cor)) {
+                int previousX = newX;
+                int previousY = newY;
+
+                switch (direção) {
+                    case "direita_cima":
+                        newX--;
+                        newY++;
+
+                        // Fascista (Bonoro)
+                        break;
+                    case "esquerda_cima":
+                        newX--;
+                        newY--;
+
+                        // Comunista
+                        break;
+                    case "direita_baixo":
+                        newX++;
+                        newY++;
+
+                        // Full capetalismo
+                        break;
+                    case "esquerda_baixo":
+                        newX++;
+                        newY--;
+
+                        // Socialista
+                        break;
+                }
+                if (this.validarJogada(direção, newX, newY)) {
+                    tabuleiro[previousX][previousY] = null;
+                    tabuleiro[newX][newY] = this;
+                }
+
+            }
+        } else {
+            this.x = newX;
+            this.y = newY;
+            tabuleiro[newX][newY] = this;
+        }
+        if (this.tipo == "Comum" && this.cor == "Branco" && newX == 7) {
             this.tipo = "Dama";
             this.simbolo = "\u235F"; // caractere da dama branca;
         }
-        if (this.tipo == "Comum" && this.cor == "Preto" && newY == 0) {
+        if (this.tipo == "Comum" && this.cor == "Preto" && newX == 0) {
             this.tipo = "Dama";
             this.simbolo = "\u272A"; // Caracter da dama preta
-        }
-        
-        if(this.validarJogada(direção, newX, newY)){
-            this.x = newX;
-            this.y = newY;
-            tabuleiro[newX][newY] = this.simbolo;
         }
         return tabuleiro;
     }
