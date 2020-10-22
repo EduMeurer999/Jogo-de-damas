@@ -122,9 +122,11 @@ public class Jogo {
     }
 
     public boolean validCoord(String coord) {
+        int x = this.findPosition(String.valueOf(coord.charAt(0)), this.legendaX);
+        int y = this.findPosition(String.valueOf(coord.charAt(1)), this.legendaY);
         if (coord.length() == 2) {
-            if (this.findPosition(String.valueOf(coord.charAt(0)), this.legendaX) >= 0) {
-                if (this.findPosition(String.valueOf(coord.charAt(1)), this.legendaY) >= 0) {
+            if (x >= 0) {
+                if (y >= 0) {
                     return true;
                 }
             }
