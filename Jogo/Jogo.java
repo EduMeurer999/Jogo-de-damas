@@ -1,34 +1,27 @@
 package Jogo;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import Peça.Peça;
 import Tabuleiro.Tabuleiro;
 
 public class Jogo {
     private Tabuleiro tab;
     private Peça[][] peças = new Peça[8][8];
+    private Peça[] peçaSimples = new Peça[64];
     private String[] legendaX = new String[8];
     private String[] legendaY = new String[8];
+    private JLabel[] tabuleiro = new JLabel[64];
+    private String vez = "Branco";
 
-    public Jogo() {
-        Tabuleiro tab = new Tabuleiro();
+    public Jogo(JLabel[] tabuleiro) {
+        this.tab = new Tabuleiro();
         Peça[][] t = new Peça[8][8];
         boolean pula = false;
-        this.legendaY[0] = "a";
-        this.legendaY[1] = "b";
-        this.legendaY[2] = "c";
-        this.legendaY[3] = "d";
-        this.legendaY[4] = "e";
-        this.legendaY[5] = "f";
-        this.legendaY[6] = "g";
-        this.legendaY[7] = "h";
-        this.legendaX[0] = "1";
-        this.legendaX[1] = "2";
-        this.legendaX[2] = "3";
-        this.legendaX[3] = "4";
-        this.legendaX[4] = "5";
-        this.legendaX[5] = "6";
-        this.legendaX[6] = "7";
-        this.legendaX[7] = "8";
         for (int i = 0; i < 3; i++) {
             pula = false;
             for (int j = 0; j < 8; j++) {
@@ -36,7 +29,7 @@ public class Jogo {
                     pula = true;
                 }
                 if (!pula) {
-                    t[i][j] = new Peça("\u26AA", i, j, "Branco");
+                    t[i][j] = new Peça(i, j, "Branco");
                     pula = true;
                 } else {
                     pula = false;
@@ -52,7 +45,7 @@ public class Jogo {
                     pula = true;
                 }
                 if (!pula) {
-                    t[i + 5][j] = new Peça("\u26AB", i + 5, j, "Preto");
+                    t[i + 5][j] = new Peça(i + 5, j, "Preto");
                     pula = true;
                 } else {
                     pula = false;
@@ -60,9 +53,113 @@ public class Jogo {
 
             }
         }
-        this.peças = t;
-        this.tab = tab;
-        System.out.println(tab.desenhaTabuleiro(t, false));
+        this.InsertPeca(tabuleiro, t);
+
+    }
+
+    private void InsertPeca(JLabel[] interfaceTabuleiro, Peça[][] arrPeça) {
+        int cont2 = 0;
+        Peça[] peçasD = this.decodificaPosicao(arrPeça);
+        for (JLabel casa : interfaceTabuleiro) {
+            Peça peça = peçasD[cont2];
+            if (peça != null) {
+                casa.setIcon(peça.getSimbolo());
+            }
+            casa.addMouseListener(new MouseAdapter() {
+                Peça localPeça = peça;
+
+                Peça[][] localArrPeça = arrPeça;
+                JLabel[] localInterfaceTabuleiro = interfaceTabuleiro;
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                    String[] options = new String[2];
+                    String [] options2 = new String[4];
+                    options[0] = "direita";
+                    options[1] = "esquerda";
+                    String longitude = "";
+                    String latitude = "";
+
+                    if (localPeça != null) {
+                        if (!localPeça.getCor().equals(vez)) {
+                            return;
+                        }
+                        if (localPeça.getCor().equals("Branco")) {
+                            latitude = "_baixo";
+                        } else {
+                            latitude = "_cima";
+                        }
+                    } else {
+                        return;
+                    }
+                    int x = -1;
+                    boolean éDama = localPeça.getTipo().equals("Dama");
+                    if (éDama) {
+                        
+                        options2[0] = "direita_cima";
+                        options2[1] = "esquerda_cima";
+                        options2[2] = "direita_baixo";
+                        options2[3] = "esquerda_baixo";
+                        x = JOptionPane.showOptionDialog(null, "Deseja se mover para qual direção?",
+                                "Click a button", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                options2, options2[0]);
+                    } else {
+                        x = JOptionPane.showOptionDialog(null, "Deseja se mover para direita ou esquerda?",
+                                "Click a button", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                options, options[0]);
+                    }
+                    int qtdCasas = 0;
+                    if (!éDama) {
+                        if (x == 0) {
+                            longitude = "direita";
+                        } else if (x == 1) {
+                            longitude = "esquerda";
+                        } else {
+                            return;
+                        }
+                    }else{
+                        boolean deuErro = false;
+                        do{
+                            try{
+                                qtdCasas = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe a quantidade de casas: "));
+                            }catch(NumberFormatException erro){
+                                deuErro = true;
+                            }
+                        }while(deuErro);
+                    }
+
+                    String direção = éDama ? options2[x] : longitude + latitude;
+
+                    if (!localPeça.validarJogada(direção, localArrPeça, éDama ? qtdCasas: 1)) {
+                        JOptionPane.showMessageDialog(null, "Movimento inválido!");
+                        return;
+                    }
+                    Peça[][] newpeças = localPeça.movimentar(direção, localArrPeça, éDama ? qtdCasas : 1);
+                    Peça[] arraysimples = decodificaPosicao(newpeças);
+                    tab.desenhaTabuleiro(arraysimples, localInterfaceTabuleiro);
+                    this.localArrPeça = newpeças;
+                    this.localPeça = null;
+                    vez = vez.equals("Branco") ? "Preto" : "Branco";
+                    InsertPeca(localInterfaceTabuleiro, this.localArrPeça);
+                }
+            });
+
+            ;
+            cont2++;
+        }
+    }
+
+    private Peça[] decodificaPosicao(Peça[][] peças) {
+        Peça[] newPeças = new Peça[64];
+        int cont1 = 0;
+        for (Peça[] arrP : peças) {
+            for (Peça p : arrP) {
+                newPeças[cont1] = p;
+                cont1++;
+            }
+        }
+        return newPeças;
     }
 
     public String verificarVitoria() {
@@ -145,10 +242,6 @@ public class Jogo {
 
     public void setPeças(Peça[][] peças) {
         this.peças = peças;
-    }
-
-    public void updateTabuleiro() {
-        System.out.println(this.tab.desenhaTabuleiro(this.peças, false));
     }
 
     public int[] getCoordDaPeça(String coord) {

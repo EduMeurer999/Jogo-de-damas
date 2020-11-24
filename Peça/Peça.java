@@ -1,26 +1,50 @@
 package Peça;
 
 import java.util.Scanner;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class Peça {
-    private String simbolo;
+    private ImageIcon simbolo;
     private int x;
     private int y;
     private String cor;
     private String tipo;
+    private String defaultPath = "C:\\Users\\NOC-02\\Desktop\\jogodamas\\Jogo-de-damas\\Imagens\\";
+    private ImageIcon imgPecaPreta = new ImageIcon(defaultPath + "Preta fundo transparente.png");
+    private ImageIcon pecaPreta = new ImageIcon(imgPecaPreta.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 
-    public Peça(String simbolo, int x, int y, String cor) {
-        this.simbolo = simbolo;
+    private ImageIcon imgPecaBranca = new ImageIcon(defaultPath + "Branca fundo transparente.png");
+    private ImageIcon pecaBranca = new ImageIcon(
+            imgPecaBranca.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+    private ImageIcon imgDamaBranca = new ImageIcon(defaultPath + "Dama Branca.png");
+    private ImageIcon damaBranca = new ImageIcon(
+            imgDamaBranca.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+    private ImageIcon imgDamaPreta = new ImageIcon(defaultPath + "Dama Preta.png");
+    private ImageIcon damaPreta = new ImageIcon(
+            imgDamaPreta.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+
+    public Peça(int x, int y, String cor) {
+        if(cor.equals("Branco")){
+            this.simbolo = this.pecaBranca;
+        }else{
+            this.simbolo = this.pecaPreta;
+        }
         this.x = x;
         this.y = y;
         this.cor = cor;
         this.tipo = "Comum";
     }
-
-    public boolean validarJogada(String direção, int x, int y, Peça[][] tabuleiro, int casas) {
+    public ImageIcon getPecaBranca() {
+        return this.pecaBranca;
+    }
+    public ImageIcon getPecaPreta() {
+        return this.pecaPreta;
+    }
+    public boolean validarJogada(String direção, Peça[][] tabuleiro, int casas) {
 
         int qtdCasas = casas;
-        int[] coords = this.decodificaPosição(direção, x, y, qtdCasas);
+        int[] coords = this.decodificaPosição(direção, this.x, this.y, qtdCasas);
         int newX = coords[0];
         int newY = coords[1];
         int newXDama = coords[0];
@@ -144,18 +168,18 @@ public class Peça {
         return tabuleiro;
     }
 
-    public String getSimbolo() {
+    public ImageIcon getSimbolo() {
         return this.simbolo;
     }
 
     private void trasformaEmDama() {
-        if (this.tipo == "Comum" && this.cor == "Branco" && this.x == 7) {
+        if (this.tipo.equals("Comum") && this.cor.equals("Branco") && this.x == 7) {
             this.tipo = "Dama";
-            this.simbolo = "\u235F "; // caractere da dama branca;
+            this.simbolo = this.damaBranca; // caractere da dama branca;
         }
-        if (this.tipo == "Comum" && this.cor == "Preto" && this.x == 0) {
+        if (this.tipo.equals("Comum") && this.cor.equals("Preto") && this.x == 0) {
             this.tipo = "Dama";
-            this.simbolo = "\u272A "; // Caracter da dama preta
+            this.simbolo = this.damaPreta; // Caracter da dama preta
         }
     }
 
@@ -168,3 +192,4 @@ public class Peça {
     }
 
 }
+// 

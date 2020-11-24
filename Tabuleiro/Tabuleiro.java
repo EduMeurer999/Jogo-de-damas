@@ -1,5 +1,7 @@
 package Tabuleiro;
 
+import javax.swing.JLabel;
+
 import Peça.Peça;
 
 public class Tabuleiro {
@@ -8,50 +10,21 @@ public class Tabuleiro {
     public Tabuleiro(){
         
     }
-    public String desenhaTabuleiro(Peça[][] tab, boolean emBranco){
-        String strTabuleiro = "";
-        if(emBranco){
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    if(i == 0 && j == 0){
-                        strTabuleiro += "\n | a | b | c | d | e | f | g | h |\n";
-                        strTabuleiro += " |---|---|---|---|---|---|---|---|\n";
-                    }
-                    if(j == 0){
-                        strTabuleiro += ""+(i+1);
-                    }
-                    
-                    strTabuleiro += "|   ";
-                    if(j == 7){
-                        strTabuleiro += "|\n |---|---|---|---|---|---|---|---|\n";
-                    }  
-                }
+    public void desenhaTabuleiro(Peça[] tab, JLabel[] labelsTabuleiro){
+        String strTabuleiro = "";     
+        int geraposiçao=0;
+        for(Peça p :tab){
+            
+            if(p != null){
+                labelsTabuleiro[geraposiçao].setIcon(p.getSimbolo());
+            }else{
+                labelsTabuleiro[geraposiçao].setIcon(null);
             }
-        }       
-        else{
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    if(i == 0 && j == 0){
-                        strTabuleiro += "\n |  a  |  b  |  c  |  d  |  e  |  f  |  g  |  h  |\n";
-                        strTabuleiro +=   " |-----|-----|-----|-----|-----|-----|-----|-----|\n";
-                    }
-                    if(j == 0){
-                        strTabuleiro += ""+(i+1);
-                    }
-                    if(tab[i][j] == null){
-                        strTabuleiro += "|     ";
-                    }else{ 
-                        strTabuleiro += "|  "+tab[i][j].getSimbolo()+" ";
-                    }
-                    
-                    if(j == 7){
-                        strTabuleiro += "|\n |-----|-----|-----|-----|-----|-----|-----|-----|\n";
-                    }
-                    
-                }
-            } 
+            
+            geraposiçao++;
+
+
         }
-        return strTabuleiro;
     }
     
 }
