@@ -2,7 +2,10 @@ package Peça;
 
 import java.util.Scanner;
 import javax.swing.ImageIcon;
+
 import java.awt.Image;
+
+import Jogo.Config;
 
 public class Peça {
     private ImageIcon simbolo;
@@ -10,7 +13,7 @@ public class Peça {
     private int y;
     private String cor;
     private String tipo;
-    private String defaultPath = "C:\\Users\\NOC-02\\Desktop\\jogodamas\\Jogo-de-damas\\Imagens\\";
+    private String defaultPath = new Config().PathImages;
     private ImageIcon imgPecaPreta = new ImageIcon(defaultPath + "Preta fundo transparente.png");
     private ImageIcon pecaPreta = new ImageIcon(imgPecaPreta.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 
@@ -49,8 +52,8 @@ public class Peça {
         int newY = coords[1];
         int newXDama = coords[0];
         int newYDama = coords[1];
-        if (newX > 8 || newX < 0 || newY > 8 || newY < 0
-                || ((newXDama > 8 || newXDama < 0 || newYDama > 8 || newYDama < 0) && this.tipo.equals("Dama"))) {
+        if (newX > 7 || newX < 0 || newY > 7 || newY < 0
+                || ((newXDama > 7 || newXDama < 0 || newYDama > 7 || newYDama < 0) && this.tipo.equals("Dama"))) {
             return false;
         }
         if (tabuleiro[newX][newY] != null) {
@@ -62,9 +65,9 @@ public class Peça {
                 int[] futureCoords = this.decodificaPosição(direção, newX, newY, 1);
                 int futureX = futureCoords[0];
                 int futureY = futureCoords[1];
-                if (futureX > 8 || futureX < 0 || futureY > 8 || futureY < 0) {
+                if (futureX > 7 || futureX < 0 || futureY > 7 || futureY < 0) {
                     return false;
-                } else if (tabuleiro[futureX][futureY] != null && !this.tipo.equals("Dama")) {
+                } else if (tabuleiro[futureX][futureY] != null) {
                     return false;
                 }
             }

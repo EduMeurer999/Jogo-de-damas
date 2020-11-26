@@ -106,7 +106,7 @@ public class Jogo {
                                 options2, options2[0]);
                     } else {
                         x = JOptionPane.showOptionDialog(null, "Deseja se mover para direita ou esquerda?",
-                                "Click a button", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                                "Click a button", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
                                 options, options[0]);
                     }
                     int qtdCasas = 0;
@@ -115,9 +115,7 @@ public class Jogo {
                             longitude = "direita";
                         } else if (x == 1) {
                             longitude = "esquerda";
-                        } else {
-                            return;
-                        }
+                        } 
                     }else{
                         boolean deuErro = false;
                         do{
